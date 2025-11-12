@@ -396,21 +396,6 @@ Please confirm this order. Thank you!
                     <p className="text-xs text-gray-500 mt-1 text-right italic">Shipping fee will be discussed via chat</p>
                   </div>
                 </div>
-
-                <div className="bg-blue-50 rounded-lg p-4 text-xs text-gray-600 space-y-2">
-                  <p className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    Secure encrypted checkout
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    3-5 day shipping
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    Temperature-controlled packaging
-                  </p>
-                </div>
               </div>
             </div>
           </div>
