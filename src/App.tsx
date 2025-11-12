@@ -15,7 +15,7 @@ import { useMenu } from './hooks/useMenu';
 
 function MainApp() {
   const cart = useCart();
-  const { menuItems } = useMenu();
+  const { menuItems, refreshProducts } = useMenu();
   const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout'>('menu');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
 

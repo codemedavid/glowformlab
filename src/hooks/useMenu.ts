@@ -9,6 +9,55 @@ export function useMenu() {
 
   useEffect(() => {
     fetchProducts();
+
+    // Set up real-time subscription for product changes
+    const productsChannel = supabase
+      .channel('products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products'
+        },
+        (payload) => {
+          console.log('Product changed:', payload);
+          fetchProducts(); // Refetch all products when any change occurs
+        }
+      )
+      .subscribe();
+
+    // Set up real-time subscription for product variations changes
+    const variationsChannel = supabase
+      .channel('variations-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'product_variations'
+        },
+        (payload) => {
+          console.log('Variation changed:', payload);
+          fetchProducts(); // Refetch all products when variations change
+        }
+      )
+      .subscribe();
+
+    // Refetch data when window regains focus (user switches back from admin)
+    const handleFocus = () => {
+      console.log('Window focused - refreshing products...');
+      fetchProducts();
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      supabase.removeChannel(productsChannel);
+      supabase.removeChannel(variationsChannel);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const fetchProducts = async () => {

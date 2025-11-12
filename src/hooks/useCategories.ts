@@ -135,6 +135,36 @@ export const useCategories = () => {
 
   useEffect(() => {
     fetchCategories();
+
+    // Set up real-time subscription for category changes
+    const categoriesChannel = supabase
+      .channel('categories-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'categories'
+        },
+        (payload) => {
+          console.log('Category changed:', payload);
+          fetchCategories(); // Refetch categories when any change occurs
+        }
+      )
+      .subscribe();
+
+    // Refetch data when window regains focus
+    const handleFocus = () => {
+      fetchCategories();
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      supabase.removeChannel(categoriesChannel);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   return {
