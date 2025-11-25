@@ -5,6 +5,68 @@ import { usePaymentMethods } from '../hooks/usePaymentMethods';
 import { useImageUpload } from '../hooks/useImageUpload';
 import { supabase } from '../lib/supabase';
 
+// Component to display payment proof with better error handling
+const PaymentProofDisplay: React.FC<{ imageUrl: string; contactMethod: string }> = ({ imageUrl, contactMethod }) => {
+  const [imageError, setImageError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const handleImageError = () => {
+    console.error('❌ Error loading payment proof image:', imageUrl);
+    setImageError(true);
+  };
+
+  const handleRetry = () => {
+    setImageError(false);
+    setRetryCount(prev => prev + 1);
+  };
+
+  if (imageError) {
+    return (
+      <div className="bg-white rounded-lg p-8 border-2 border-red-300 shadow-lg text-center">
+        <div className="text-red-600 mb-4">
+          <X className="w-12 h-12 mx-auto mb-2" />
+          <p className="font-semibold text-lg">⚠️ Image failed to load</p>
+          <p className="text-sm mt-2">Unable to display payment proof image.</p>
+        </div>
+        <div className="space-y-2 text-sm text-gray-600">
+          <p><strong>Possible reasons:</strong></p>
+          <ul className="text-left max-w-md mx-auto space-y-1">
+            <li>• Image was uploaded but URL is not accessible</li>
+            <li>• Storage bucket permissions issue</li>
+            <li>• Network connection problem</li>
+          </ul>
+        </div>
+        <button
+          onClick={handleRetry}
+          className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all"
+        >
+          Retry Loading Image
+        </button>
+        <p className="text-xs text-gray-500 mt-4">
+          💡 <strong>Note:</strong> Your payment proof was uploaded successfully. Please check your uploaded file or contact support if this persists.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-lg p-4 border-2 border-green-300 shadow-lg">
+      <img
+        key={retryCount}
+        src={imageUrl}
+        alt="Payment Proof - Screenshot this image"
+        className="w-full max-w-2xl mx-auto rounded-lg shadow-md object-contain cursor-pointer hover:opacity-95 transition-opacity"
+        style={{ maxHeight: '600px', minHeight: '300px' }}
+        onError={handleImageError}
+        onLoad={() => {
+          console.log('✅ Payment proof image loaded successfully:', imageUrl);
+          setImageError(false);
+        }}
+      />
+    </div>
+  );
+};
+
 interface CheckoutProps {
   cartItems: CartItem[];
   totalPrice: number;
@@ -378,24 +440,10 @@ Please confirm this order. Thank you!
                     📸 Screenshot this image and attach it when sending your order message
                   </p>
                 </div>
-                <div className="bg-white rounded-lg p-4 border-2 border-green-300 shadow-lg">
-                  <img
-                    src={paymentProofUrl}
-                    alt="Payment Proof - Screenshot this image"
-                    className="w-full max-w-2xl mx-auto rounded-lg shadow-md object-contain cursor-pointer hover:opacity-95 transition-opacity"
-                    style={{ maxHeight: '600px', minHeight: '300px' }}
-                    onError={(e) => {
-                      console.error('❌ Error loading payment proof image:', paymentProofUrl);
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement!.innerHTML = `
-                        <div class="p-8 text-center text-red-600">
-                          <p class="font-semibold">⚠️ Image failed to load</p>
-                          <p class="text-sm mt-2">Please check your internet connection or try uploading again.</p>
-                        </div>
-                      `;
-                    }}
-                  />
-                </div>
+                <PaymentProofDisplay 
+                  imageUrl={paymentProofUrl} 
+                  contactMethod={contactMethod}
+                />
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <p className="text-sm text-blue-800 text-center">
                     💡 <strong>Tip:</strong> Take a screenshot of the image above, then attach it when sending your order message via {contactMethod === 'instagram' ? 'Instagram' : 'Viber'}.

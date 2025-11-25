@@ -57,22 +57,21 @@ INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 VALUES (
   'payment-proofs',
   'payment-proofs',
-  false,  -- Private bucket (payment proofs should not be public)
+  true,  -- Public bucket (so customers can view their uploaded proof)
   10485760,  -- 10MB limit
   ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml', 'image/heic', 'image/heif']
 ) ON CONFLICT (id) DO UPDATE
 SET 
-  public = false,
+  public = true,
   file_size_limit = 10485760,
   allowed_mime_types = ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg+xml', 'image/heic', 'image/heif'];
 
--- Policies for payment-proofs bucket (private, but allow uploads)
--- Read access: Only authenticated users or specific access control
-DROP POLICY IF EXISTS "Authenticated read access for payment proofs" ON storage.objects;
-CREATE POLICY "Authenticated read access for payment proofs"
+-- Policies for payment-proofs bucket (public read access so customers can view)
+DROP POLICY IF EXISTS "Public read access for payment proofs" ON storage.objects;
+CREATE POLICY "Public read access for payment proofs"
 ON storage.objects
 FOR SELECT
-TO authenticated
+TO public
 USING (bucket_id = 'payment-proofs');
 
 -- Allow public to upload (for checkout process)

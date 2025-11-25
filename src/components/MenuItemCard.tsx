@@ -34,7 +34,18 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     setQuantity(1);
   };
 
-  const incrementQuantity = () => setQuantity(prev => prev + 1);
+  const availableStock = selectedVariation ? selectedVariation.stock_quantity : product.stock_quantity;
+  
+  const incrementQuantity = () => {
+    setQuantity(prev => {
+      if (prev >= availableStock) {
+        alert(`Only ${availableStock} item(s) available in stock.`);
+        return prev;
+      }
+      return prev + 1;
+    });
+  };
+  
   const decrementQuantity = () => setQuantity(prev => prev > 1 ? prev - 1 : 1);
 
   return (
@@ -198,13 +209,17 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
             </button>
             <span className="px-1.5 sm:px-2 md:px-3 lg:px-4 py-0.5 sm:py-1 md:py-1.5 lg:py-2 font-semibold text-gray-800 min-w-[20px] sm:min-w-[24px] md:min-w-[36px] text-center text-[10px] sm:text-xs md:text-sm lg:text-base">
               {quantity}
+              {availableStock > 0 && (
+                <span className="block text-[8px] sm:text-[9px] md:text-[10px] text-gray-500">/ {availableStock}</span>
+              )}
             </span>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 incrementQuantity();
               }}
-              className="p-0.5 sm:p-1 md:p-1.5 lg:p-2 hover:bg-gray-100 transition-colors"
+              disabled={quantity >= availableStock}
+              className="p-0.5 sm:p-1 md:p-1.5 lg:p-2 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-gray-600" />
             </button>
@@ -214,9 +229,14 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
+              if (quantity > availableStock) {
+                alert(`Only ${availableStock} item(s) available in stock.`);
+                setQuantity(availableStock);
+                return;
+              }
               handleAddToCart();
             }}
-            disabled={!product.available || product.stock_quantity === 0}
+            disabled={!product.available || availableStock === 0 || quantity === 0}
             className="flex-1 bg-gradient-to-r from-black to-gray-900 hover:from-gray-900 hover:to-black text-white px-1.5 py-1 sm:px-2 sm:py-1.5 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded sm:rounded-md md:rounded-lg font-semibold transition-all duration-200 active:scale-95 shadow-md hover:shadow-gold-glow disabled:opacity-50 disabled:cursor-not-allowed text-[10px] sm:text-[11px] md:text-sm lg:text-base border border-gold-500/20"
           >
             <ShoppingCart className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 inline mr-0.5 sm:mr-1 md:mr-2" />

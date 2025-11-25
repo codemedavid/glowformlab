@@ -142,10 +142,28 @@ const Cart: React.FC<CartProps> = ({
                         </button>
                         <span className="px-3 md:px-4 py-1.5 md:py-2 font-bold text-gray-800 min-w-[32px] md:min-w-[40px] text-center text-sm md:text-base">
                           {item.quantity}
+                          {(() => {
+                            const availableStock = item.variation ? item.variation.stock_quantity : item.product.stock_quantity;
+                            if (availableStock > 0) {
+                              return <span className="block text-[10px] text-gray-500">/ {availableStock}</span>;
+                            }
+                            return null;
+                          })()}
                         </span>
                         <button
-                          onClick={() => updateQuantity(index, item.quantity + 1)}
-                          className="p-1.5 md:p-2 hover:bg-gray-50 transition-colors rounded-r-lg"
+                          onClick={() => {
+                            const availableStock = item.variation ? item.variation.stock_quantity : item.product.stock_quantity;
+                            if (item.quantity >= availableStock) {
+                              alert(`Only ${availableStock} item(s) available in stock.`);
+                              return;
+                            }
+                            updateQuantity(index, item.quantity + 1);
+                          }}
+                          disabled={(() => {
+                            const availableStock = item.variation ? item.variation.stock_quantity : item.product.stock_quantity;
+                            return item.quantity >= availableStock;
+                          })()}
+                          className="p-1.5 md:p-2 hover:bg-gray-50 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Plus className="w-3 h-3 md:w-4 md:h-4 text-black" />
                         </button>

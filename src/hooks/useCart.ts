@@ -22,6 +22,14 @@ export function useCart() {
   }, [cartItems]);
 
   const addToCart = (product: Product, variation?: ProductVariation, quantity: number = 1) => {
+    // Check stock availability
+    const availableStock = variation ? variation.stock_quantity : product.stock_quantity;
+    
+    if (availableStock === 0) {
+      alert(`Sorry, ${product.name}${variation ? ` ${variation.name}` : ''} is out of stock.`);
+      return;
+    }
+
     const price = variation ? variation.price : (product.discount_active && product.discount_price ? product.discount_price : product.base_price);
     
     const existingItemIndex = cartItems.findIndex(
@@ -30,12 +38,31 @@ export function useCart() {
     );
 
     if (existingItemIndex > -1) {
-      // Update existing item
+      // Update existing item - check if new total exceeds stock
+      const currentQuantity = cartItems[existingItemIndex].quantity;
+      const newQuantity = currentQuantity + quantity;
+      
+      if (newQuantity > availableStock) {
+        const remainingStock = availableStock - currentQuantity;
+        if (remainingStock > 0) {
+          alert(`Only ${remainingStock} item(s) available in stock. Added ${remainingStock} to your cart.`);
+          quantity = remainingStock;
+        } else {
+          alert(`Sorry, you already have the maximum available quantity (${currentQuantity}) in your cart.`);
+          return;
+        }
+      }
+      
       const updatedItems = [...cartItems];
       updatedItems[existingItemIndex].quantity += quantity;
       setCartItems(updatedItems);
     } else {
-      // Add new item
+      // Add new item - check if quantity exceeds stock
+      if (quantity > availableStock) {
+        alert(`Only ${availableStock} item(s) available in stock. Added ${availableStock} to your cart.`);
+        quantity = availableStock;
+      }
+      
       const newItem: CartItem = {
         product,
         variation,
@@ -50,6 +77,15 @@ export function useCart() {
     if (quantity <= 0) {
       removeFromCart(index);
       return;
+    }
+
+    // Check stock availability
+    const item = cartItems[index];
+    const availableStock = item.variation ? item.variation.stock_quantity : item.product.stock_quantity;
+    
+    if (quantity > availableStock) {
+      alert(`Only ${availableStock} item(s) available in stock.`);
+      quantity = availableStock;
     }
 
     const updatedItems = [...cartItems];
