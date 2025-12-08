@@ -55,9 +55,9 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
       case 'NCR':
         return 75;
       case 'LUZON':
-        return 165;
+        return 100;
       case 'VISAYAS_MINDANAO':
-        return 190;
+        return 130;
       default:
         return 0;
     }
@@ -168,7 +168,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
       });
 
       const orderDetails = `
-✨ HP GLOW - NEW ORDER
+✨PeptalkPH - NEW ORDER
 
 📅 ORDER DATE & TIME
 ${dateTimeStamp}
@@ -374,7 +374,7 @@ Please confirm this order. Thank you!
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">3️⃣</span>
-                  <span>Pay today, ship tomorrow. Payments made before 1 PM are shipped the same day.</span>
+                  <span>Payments made before 11 AM are shipped the same day.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">4️⃣</span>
