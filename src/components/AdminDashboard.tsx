@@ -343,7 +343,7 @@ const AdminDashboard: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'Peptidepulse@Admin123') {
+    if (password === 'glowform@Admin!123') {
       setIsAuthenticated(true);
       localStorage.setItem('peptide_admin_auth', 'true');
       setLoginError('');
