@@ -103,7 +103,7 @@ const SiteSettingsManager: React.FC = () => {
         hero_title_suffix: '& Essentials',
         hero_subtext: 'From the Lab to You — Simplifying Science, One Dose at a Time.',
         hero_tagline: 'Quality-tested products. Reliable performance. Trusted by our community.',
-        hero_description: 'Peptide Pulse is your all-in-one destination for high-quality peptides, peptide pens, and the essential accessories you need for a smooth and confident wellness routine.',
+        hero_description: 'Where science meets sparkle — Glowform Lab offers wellness designed to help you glow with confidence. Premium peptides and wellness solutions.',
       }));
     }
   };
@@ -128,7 +128,7 @@ const SiteSettingsManager: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Site Logo</label>
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
-                  <img src={logoPreview || '/assets/logo.jpeg'} alt="Logo" className="w-full h-full object-cover" />
+                  <img src={logoPreview || '/assets/logo.jpg'} alt="Logo" className="w-full h-full object-cover" />
                 </div>
                 <label className="cursor-pointer bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
                   Change

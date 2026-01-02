@@ -284,7 +284,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
       });
 
       const orderDetails = `
-✨Peptide Pulse - NEW ORDER
+✨Glowform Lab - NEW ORDER
 
 📅 ORDER DATE & TIME
 ${dateTimeStamp}
@@ -325,7 +325,7 @@ ${paymentMethod ? `Account: ${paymentMethod.account_number}` : ''}
 ${paymentProofUrl ? 'Screenshot attached to order.' : 'Pending'}
 
 📱 CONTACT METHOD
-Messenger: https://m.me/PeptidePulse
+Facebook: https://www.facebook.com/glowformlab
 
 📋 ORDER ID: ${orderData.id}
 
@@ -344,9 +344,9 @@ Please confirm this order. Thank you!
       }
 
       // Open contact method based on selection
-      // Using m.me link with Page ID to open Messenger directly
+      // Using Facebook page link
       const contactUrl = contactMethod === 'messenger'
-        ? `https://m.me/61555961135365?text=${encodeURIComponent(orderDetails)}`
+        ? `https://www.facebook.com/glowformlab`
         : null;
 
       if (contactUrl) {
@@ -402,7 +402,7 @@ Please confirm this order. Thank you!
 
   const handleOpenContact = () => {
     const contactUrl = contactMethod === 'messenger'
-      ? `https://m.me/61555961135365?text=${encodeURIComponent(orderMessage)}`
+      ? `https://www.facebook.com/glowformlab`
       : null;
 
     if (contactUrl) {
@@ -1000,7 +1000,7 @@ Please confirm this order. Thank you!
                     <MessageCircle className="w-6 h-6 text-gold-600" />
                     <div className="text-left">
                       <p className="font-semibold text-navy-900">Messenger</p>
-                      <p className="text-sm text-gray-500">Peptide Pulse</p>
+                      <p className="text-sm text-gray-500">Glowform Lab</p>
                     </div>
                   </div>
                   {contactMethod === 'messenger' && (

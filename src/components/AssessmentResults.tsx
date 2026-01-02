@@ -220,7 +220,7 @@ const AssessmentResults: React.FC = () => {
                         </h3>
                         <p className="text-gray-600 mb-6 leading-relaxed">
                             These recommendations are based on your self-reported research interests.
-                            All compounds provided by Peptide Pulse are strictly for laboratory research use only
+                            All compounds provided by Glowform Lab are strictly for laboratory research use only
                             and are not for human consumption.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4">

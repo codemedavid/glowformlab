@@ -47,7 +47,7 @@ export default function GuideManager() {
         preview: '',
         content: '',
         cover_image: null,
-        author: 'Peptide Pulse Team',
+        author: 'Glowform Lab Team',
         published_date: new Date().toISOString().split('T')[0],
         display_order: 0,
         is_enabled: true
@@ -97,7 +97,7 @@ export default function GuideManager() {
                 preview: '',
                 content: '',
                 cover_image: null,
-                author: 'Peptide Pulse Team',
+                author: 'Glowform Lab Team',
                 published_date: new Date().toISOString().split('T')[0],
                 display_order: maxOrder + 1,
                 is_enabled: true
@@ -114,7 +114,7 @@ export default function GuideManager() {
             preview: '',
             content: '',
             cover_image: null,
-            author: 'Peptide Pulse Team',
+            author: 'Glowform Lab Team',
             published_date: new Date().toISOString().split('T')[0],
             display_order: 0,
             is_enabled: true

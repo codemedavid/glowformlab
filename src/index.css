@@ -1,27 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Magenta-led Peptide Pulse Brand Theme */
-  --theme-bg: #FFFFFF;
-  --theme-text: #111111;
-  --theme-accent: #E91E63;
-  --theme-accent-hover: #FF4F9A;
-  --theme-secondary: #F4F4F6;
-  --text-secondary: #4A4A4A;
+  /* Glowform Lab Brand Theme - Magical Wellness Science */
+  --theme-bg: #FFF6E8;
+  --theme-text: #7A4A2E;
+  --theme-accent: #F4C24F;
+  --theme-accent-hover: #E3AE3A;
+  --theme-secondary: #F3D2B8;
+  --text-secondary: #9B6B4A;
 
-  --primary-magenta: #E91E63;
-  --primary-white: #ffffff;
+  /* Color Palette */
+  --cream: #FFF6E8;
+  --gold: #F4C24F;
+  --honey: #E3AE3A;
+  --peach: #F3D2B8;
+  --blush: #F2B8C6;
+  --caramel: #7A4A2E;
+  --sparkle: #FFFFFF;
 
-  --gray-50: #FFFFFF;
-  --gray-100: #F9F9F9;
-  --gray-200: #F4F4F6;
-  --gray-300: #E5E5E5;
-  --gray-500: #888888;
-  --gray-900: #111111;
+  /* Grayscale with warm undertones */
+  --gray-50: #FFFCF7;
+  --gray-100: #FFF9F0;
+  --gray-200: #FFEFD8;
+  --gray-300: #E5D7C8;
+  --gray-500: #B29A79;
+  --gray-900: #7A4A2E;
 }
 
 * {
@@ -36,7 +43,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--theme-bg);
   color: var(--theme-text);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 h1,
@@ -45,69 +52,122 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: 'Playfair Display', serif;
   font-weight: 600;
   color: var(--theme-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
-/* Magenta Brand Button Styles */
+/* Glowform Lab Button Styles */
 .btn-primary {
-  @apply bg-magenta-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-magenta-400 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+  @apply bg-gold-400 text-caramel-600 px-8 py-3 rounded-2xl font-semibold hover:bg-gold-500 transition-all duration-300 shadow-glow hover:shadow-glow-lg transform hover:-translate-y-0.5;
 }
 
 .btn-secondary {
-  @apply bg-transparent text-theme-text border border-theme-text px-6 py-3 rounded-md font-medium transition-all duration-200 hover:bg-magenta-500 hover:text-white hover:border-magenta-500 active:scale-95;
+  @apply bg-transparent text-caramel-600 border-2 border-gold-400 px-6 py-3 rounded-2xl font-medium transition-all duration-300 hover:bg-gold-400 hover:text-caramel-600 active:scale-95;
 }
 
 .btn-outline {
-  @apply bg-transparent text-theme-text border border-gray-300 px-4 py-2 rounded-md font-medium transition-all duration-200 hover:border-magenta-500 hover:text-magenta-500;
+  @apply bg-transparent text-caramel-500 border border-peach-300 px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:border-gold-400 hover:text-gold-600 hover:bg-cream-100;
 }
 
 .btn-gold {
-  /* Backward compatibility mapping to magenta accent */
-  @apply bg-magenta-500 text-white px-6 py-3 rounded-md font-medium transition-all duration-200 hover:bg-magenta-400 active:scale-95 shadow-sm;
+  @apply bg-gradient-to-r from-gold-400 to-gold-500 text-white px-6 py-3 rounded-2xl font-semibold transition-all duration-300 hover:from-gold-500 hover:to-gold-600 active:scale-95 shadow-glow hover:shadow-glow-lg;
 }
 
-/* Minimalist Card Styles */
+/* Warm Card Styles */
 .card {
-  @apply bg-white rounded-lg shadow-soft transition-all duration-200 border border-transparent hover:border-gray-200;
+  @apply bg-white rounded-3xl shadow-soft transition-all duration-300 border border-cream-300/50 hover:border-gold-200;
 }
 
 .card-hover {
-  @apply transform transition-all duration-300 hover:-translate-y-1 hover:shadow-medium;
+  @apply transform transition-all duration-300 hover:-translate-y-2 hover:shadow-glow;
 }
 
 /* Badge Styles */
 .badge {
-  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium;
 }
 
 .badge-gold {
-  @apply bg-theme-bg text-theme-secondary border border-theme-secondary;
+  @apply bg-gold-50 text-gold-600 border border-gold-200;
 }
 
 .badge-accent {
-  @apply bg-theme-accent bg-opacity-10 text-theme-accent border border-theme-accent border-opacity-20;
+  @apply bg-blush-100 text-blush-600 border border-blush-200;
 }
 
 .badge-black {
-  @apply bg-theme-text text-white;
+  @apply bg-caramel-600 text-cream-50;
 }
 
 /* Input Styles */
 .input-field {
-  @apply w-full px-4 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-theme-accent focus:border-theme-accent transition-all bg-white hover:border-gray-300;
+  @apply w-full px-4 py-3 border border-peach-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:border-gold-400 transition-all bg-white hover:border-peach-300 text-caramel-600 placeholder:text-caramel-300;
 }
 
 .input-field:disabled {
-  @apply bg-gray-50 cursor-not-allowed opacity-70;
+  @apply bg-cream-100 cursor-not-allowed opacity-70;
 }
 
-/* Animations */
+/* Sparkle Animation */
+@keyframes sparkle {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Float Animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Glow Pulse Animation */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(244, 194, 79, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(244, 194, 79, 0.5);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Fade In Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(10px);
   }
 
   to {
@@ -120,6 +180,7 @@ h6 {
   animation: fadeIn 0.5s ease-out;
 }
 
+/* Slide In Animation */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -136,23 +197,24 @@ h6 {
   animation: slideIn 0.4s ease-out;
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Warm Theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--cream);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-300);
-  border-radius: 3px;
+  background: linear-gradient(to bottom, var(--gold), var(--honey));
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--theme-secondary);
+  background: linear-gradient(to bottom, var(--honey), var(--gold));
 }
 
 /* Utility Classes */
@@ -164,10 +226,10 @@ h6 {
   @apply py-12 sm:py-16;
 }
 
-/* Loading Spinner */
+/* Loading Spinner - Golden */
 .spinner {
-  border: 2px solid var(--gray-200);
-  border-top: 2px solid var(--theme-accent);
+  border: 3px solid var(--cream);
+  border-top: 3px solid var(--gold);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -184,16 +246,55 @@ h6 {
   }
 }
 
-/* Text Gradients (Simplified/Removed for minimalism, keeping simple colors) */
+/* Text Gradients - Golden Glow */
 .text-gradient-gold {
-  @apply text-theme-secondary;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--honey) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-warm {
+  background: linear-gradient(135deg, var(--caramel) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .text-gradient-black {
-  @apply text-theme-text;
+  @apply text-caramel-600;
 }
 
+/* Focus States - Golden */
 *:focus-visible {
-  outline: 2px solid var(--theme-accent);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 194, 79, 0.2);
+}
+
+/* Sparkle decoration */
+.sparkle-decoration::before,
+.sparkle-decoration::after {
+  content: '✨';
+  position: absolute;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle-decoration::before {
+  top: -10px;
+  right: -10px;
+  animation-delay: 0s;
+}
+
+.sparkle-decoration::after {
+  bottom: -10px;
+  left: -10px;
+  animation-delay: 1s;
 }

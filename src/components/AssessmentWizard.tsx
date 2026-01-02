@@ -75,12 +75,12 @@ const TermsAndConditions: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <div className="space-y-6 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh] pr-2">
                 <section>
                     <h3 className="font-bold text-theme-text mb-2">1. Acceptance of Terms</h3>
-                    <p>By accessing and using Peptide Pulse, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                    <p>By accessing and using Glowform Lab, you accept and agree to be bound by the terms and provision of this agreement.</p>
                 </section>
 
                 <section>
                     <h3 className="font-bold text-theme-text mb-2">2. Research Purposes Only</h3>
-                    <p>All peptides sold on this website are for research purposes only. They are not intended for human consumption, medical use, or any therapeutic application. By purchasing from Peptide Pulse, you acknowledge that you are a qualified researcher or institution.</p>
+                    <p>All peptides sold on this website are for research purposes only. They are not intended for human consumption, medical use, or any therapeutic application. By purchasing from Glowform Lab, you acknowledge that you are a qualified researcher or institution.</p>
                 </section>
 
                 <section>
@@ -95,7 +95,7 @@ const TermsAndConditions: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
                 <section>
                     <h3 className="font-bold text-theme-text mb-2">5. Limitation of Liability</h3>
-                    <p>Peptide Pulse shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service.</p>
+                    <p>Glowform Lab shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the service.</p>
                 </section>
 
                 <section>
@@ -287,7 +287,7 @@ const AssessmentWizard: React.FC = () => {
                             <div className="w-16 h-16 bg-magenta-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <ShieldCheck className="w-8 h-8 text-magenta-500" />
                             </div>
-                            <h2 className="text-2xl font-bold text-theme-text">Thank you for choosing Peptide Pulse!</h2>
+                            <h2 className="text-2xl font-bold text-theme-text">Thank you for choosing Glowform Lab!</h2>
                             <p className="text-gray-600 mt-2">Let's start by reviewing our terms and consent</p>
                         </div>
 

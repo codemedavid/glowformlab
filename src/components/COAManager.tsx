@@ -228,7 +228,7 @@ const COAManager: React.FC<COAManagerProps> = ({ onBack }) => {
       verification_key: '',
       image_url: '/coa/',
       featured: false,
-      manufacturer: 'Peptide Pulse',
+      manufacturer: 'Glowform Lab',
       laboratory: 'Janoshik Analytical',
     });
   };
