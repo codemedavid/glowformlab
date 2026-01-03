@@ -208,6 +208,7 @@ const AdminDashboard: React.FC = () => {
           'featured',
           'image_url',
           'safety_sheet_url',
+          'inclusions',
         ];
 
         const dbPayload: Partial<Product> = {};
@@ -281,10 +282,12 @@ const AdminDashboard: React.FC = () => {
         // Remove non-creatable fields for new products
         const { variations, ...createData } = formData as any;
 
-        // EXPLICITLY ensure image_url is included
+        // EXPLICITLY ensure critical fields are included
         const createPayload = {
           ...createData,
           image_url: formData.image_url !== undefined ? formData.image_url : null,
+          // IMPORTANT: Ensure available is explicitly true for new products
+          available: formData.available !== undefined ? formData.available : true,
         };
 
         const preparedData = prepareData(createPayload);
@@ -294,6 +297,7 @@ const AdminDashboard: React.FC = () => {
         console.log('💾 Creating new product:', {
           name: dbPayload.name,
           image_url: dbPayload.image_url,
+          available: dbPayload.available,
           fullPayload: dbPayload
         });
 
