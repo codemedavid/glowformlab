@@ -301,12 +301,80 @@ export function useMenu() {
 
   const deleteProduct = async (id: string) => {
     try {
+      console.log(`🗑️ Deleting product ${id}...`);
+
+      // Try server-side RPC first (most robust)
+      const { error: rpcError } = await supabase.rpc('delete_product_cascade', { target_product_id: id });
+
+      if (!rpcError) {
+        console.log('✅ Product deleted via secure RPC');
+        setProducts(products.filter(p => p.id !== id));
+        return { success: true };
+      }
+
+      console.warn('⚠️ RPC delete failed:', rpcError);
+
+      // If RPC failed due to missing function, FORCE ALERTS so user knows to run the SQL
+      if (rpcError.message?.includes('function') && rpcError.message?.includes('not found')) {
+        alert('CRITICAL ERROR: The "delete_product_cascade" function is missing from your database.\n\nPlease go to Supabase -> SQL Editor and run the "Ultimate Fix" script I provided.');
+        return { success: false, error: 'Database function missing - run the SQL script' };
+      }
+
+      // If permission denied
+      if (rpcError.code === '42501' || rpcError.message?.includes('permission')) {
+        alert('PERMISSION DENIED: The database blocked this deletion.\n\nPlease run the "Ultimate Fix" script to grant permissions to the delete function.');
+      }
+
+      console.warn('⚠️ Falling back to manual client-side deletion...');
+
+      // Fallback: Manual delete logic
+      // 1. Manually delete related recommendation rules first
+      console.log('  -> Cleaning up recommendation rules...');
+
+      const { error: rulesError1 } = await supabase
+        .from('recommendation_rules')
+        .delete({ count: 'exact' })
+        .eq('product_id', id);
+
+      if (rulesError1) console.warn('Warning cleanup rules (product_id):', rulesError1);
+
+      const { error: rulesError2 } = await supabase
+        .from('recommendation_rules')
+        .delete({ count: 'exact' })
+        .eq('recommended_product_id', id);
+
+      if (rulesError2) console.warn('Warning cleanup rules (recommended_product_id):', rulesError2);
+
+      // 2. IMPORTANT: Delete variations explicitly
+      console.log('  -> Cleaning up product variations...');
+      const { error: variationsError } = await supabase
+        .from('product_variations')
+        .delete()
+        .eq('product_id', id);
+
+      if (variationsError) {
+        console.error('Failed to cleanup variations:', variationsError);
+        // Don't throw yet, try to delete product anyway in case constraints allow it
+      }
+
+      // 3. Delete the product
+      console.log('  -> Deleting product record...');
       const { error } = await supabase
         .from('products')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        // Enhance error message if it looks like a foreign key constraint
+        if (error.code === '23503') {
+          console.error('CRITICAL: Foreign Key Violation detected. RLS likely blocked the cleanup.');
+          throw new Error(
+            `Delete Failed: Database permissions are preventing cleanup. ` +
+            `PLEASE RUN THE PROVIDED SQL SCRIPT to unlock the 'recommendation_rules' and 'product_variations' tables.`
+          );
+        }
+        throw error;
+      }
 
       setProducts(products.filter(p => p.id !== id));
       return { success: true };
@@ -319,6 +387,25 @@ export function useMenu() {
   const deleteProducts = async (ids: string[]) => {
     try {
       console.log(`🗑️ Batch deleting ${ids.length} products...`);
+
+      // 1. Manually delete related recommendation rules first
+      console.log('  -> Cleaning up recommendation rules for batch...');
+
+      const { error: rulesError1 } = await supabase
+        .from('recommendation_rules')
+        .delete()
+        .in('product_id', ids);
+
+      if (rulesError1) console.warn('Warning batch cleanup rules (product_id):', rulesError1);
+
+      const { error: rulesError2 } = await supabase
+        .from('recommendation_rules')
+        .delete()
+        .in('recommended_product_id', ids);
+
+      if (rulesError2) console.warn('Warning batch cleanup rules (recommended_product_id):', rulesError2);
+
+      // 2. Delete the products
       const { error } = await supabase
         .from('products')
         .delete()
