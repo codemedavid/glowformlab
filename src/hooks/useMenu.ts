@@ -312,17 +312,11 @@ export function useMenu() {
         return { success: true };
       }
 
-      console.warn('⚠️ RPC delete failed:', rpcError);
+      console.error('⚠️ RPC delete failed:', rpcError);
 
-      // If RPC failed due to missing function, FORCE ALERTS so user knows to run the SQL
+      // If RPC failed, alert the user but continue to fallback if possible
       if (rpcError.message?.includes('function') && rpcError.message?.includes('not found')) {
-        alert('CRITICAL ERROR: The "delete_product_cascade" function is missing from your database.\n\nPlease go to Supabase -> SQL Editor and run the "Ultimate Fix" script I provided.');
-        return { success: false, error: 'Database function missing - run the SQL script' };
-      }
-
-      // If permission denied
-      if (rpcError.code === '42501' || rpcError.message?.includes('permission')) {
-        alert('PERMISSION DENIED: The database blocked this deletion.\n\nPlease run the "Ultimate Fix" script to grant permissions to the delete function.');
+        console.warn('RPC function missing. Attempting manual cleanup...');
       }
 
       console.warn('⚠️ Falling back to manual client-side deletion...');
@@ -354,7 +348,9 @@ export function useMenu() {
 
       if (variationsError) {
         console.error('Failed to cleanup variations:', variationsError);
-        // Don't throw yet, try to delete product anyway in case constraints allow it
+        // If we can't delete variations, we definitely can't delete the product if constraints exist
+        // But if constraints are ON DELETE CASCADE, it might handle it.
+        // Let's assume if this failed, it's an RLS issue.
       }
 
       // 3. Delete the product
@@ -365,12 +361,14 @@ export function useMenu() {
         .eq('id', id);
 
       if (error) {
+        console.error('Manual delete failed:', error);
+
         // Enhance error message if it looks like a foreign key constraint
         if (error.code === '23503') {
-          console.error('CRITICAL: Foreign Key Violation detected. RLS likely blocked the cleanup.');
+          console.error('CRITICAL: Foreign Key Violation detected.');
           throw new Error(
-            `Delete Failed: Database permissions are preventing cleanup. ` +
-            `PLEASE RUN THE PROVIDED SQL SCRIPT to unlock the 'recommendation_rules' and 'product_variations' tables.`
+            `Delete Failed: The database blocked the deletion due to existing links. ` +
+            `Please run the "Nuclear Fix" script in Supabase SQL Editor to fix permissions.`
           );
         }
         throw error;
@@ -388,33 +386,18 @@ export function useMenu() {
     try {
       console.log(`🗑️ Batch deleting ${ids.length} products...`);
 
-      // 1. Manually delete related recommendation rules first
-      console.log('  -> Cleaning up recommendation rules for batch...');
+      // Use the robust RPC function for each product
+      // This is safer than a big WHERE IN query because it handles cascades correctly for each
+      const results = await Promise.all(ids.map(id => deleteProduct(id)));
 
-      const { error: rulesError1 } = await supabase
-        .from('recommendation_rules')
-        .delete()
-        .in('product_id', ids);
-
-      if (rulesError1) console.warn('Warning batch cleanup rules (product_id):', rulesError1);
-
-      const { error: rulesError2 } = await supabase
-        .from('recommendation_rules')
-        .delete()
-        .in('recommended_product_id', ids);
-
-      if (rulesError2) console.warn('Warning batch cleanup rules (recommended_product_id):', rulesError2);
-
-      // 2. Delete the products
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .in('id', ids);
-
-      if (error) throw error;
+      const failures = results.filter(r => !r.success);
+      if (failures.length > 0) {
+        throw new Error(`Failed to delete ${failures.length} products. first error: ${failures[0].error}`);
+      }
 
       console.log('✅ Batch delete successful');
-      setProducts(products.filter(p => !ids.includes(p.id)));
+      // Refresh strictly to ensure state is synced
+      await fetchProducts();
       return { success: true };
     } catch (err) {
       console.error('❌ Error deleting products batch:', err);
