@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ShieldCheck, Truck, Clock, Sparkles, Heart, Award, Star } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck, Clock, Sparkles, Heart, Award, Star, ClipboardCheck } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroProps {
   onShopAll: () => void;
@@ -9,6 +10,7 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ onShopAll }) => {
   const [isVisible, setIsVisible] = useState(false);
   const { siteSettings } = useSiteSettings();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -130,6 +132,16 @@ const Hero: React.FC<HeroProps> = ({ onShopAll }) => {
 
             {/* CTA Button */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <button
+                onClick={() => navigate('/assessment')}
+                className="group relative px-10 py-5 bg-white text-gold-600 border-2 border-gold-400 rounded-3xl font-bold text-lg shadow-soft hover:shadow-glow hover:bg-gold-50 hover:-translate-y-1 transition-all duration-300 overflow-hidden font-poppins"
+              >
+                <span className="relative flex items-center justify-center gap-2">
+                  <ClipboardCheck className="w-5 h-5" />
+                  Take the Peptide Quiz
+                </span>
+              </button>
+
               <button
                 onClick={onShopAll}
                 className="group relative px-10 py-5 bg-gradient-to-r from-gold-400 to-gold-500 text-caramel-700 rounded-3xl font-bold text-lg shadow-glow-lg hover:shadow-glow hover:from-gold-500 hover:to-honey hover:-translate-y-1 transition-all duration-300 overflow-hidden font-poppins"
